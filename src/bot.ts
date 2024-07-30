@@ -1,9 +1,9 @@
 import WebSocket from 'ws';
 
-// interface GameData {
-//     board: (string | null)[];
-//     message: string;
-// }
+interface GameData {
+    board: (string | null)[];
+    message: string;
+}
 
 const ws = new WebSocket('ws://localhost:8080');
 
@@ -12,7 +12,7 @@ ws.on('open', () => {
 });
 
 ws.on('message', (incomingData: string) => {
-    const data = JSON.parse(incomingData);
+    const data: GameData = JSON.parse(incomingData);
     const { board, message } = data;
 
     if (message) {
