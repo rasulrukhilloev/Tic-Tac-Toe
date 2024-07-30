@@ -1,4 +1,9 @@
-const WebSocket = require('ws');
+import WebSocket from 'ws';
+
+// interface GameData {
+//     board: (string | null)[];
+//     message: string;
+// }
 
 const ws = new WebSocket('ws://localhost:8080');
 
@@ -6,7 +11,7 @@ ws.on('open', () => {
     console.log('Connected to game socket');
 });
 
-ws.on('message', (incomingData) => {
+ws.on('message', (incomingData: string) => {
     const data = JSON.parse(incomingData);
     const { board, message } = data;
 
@@ -16,12 +21,12 @@ ws.on('message', (incomingData) => {
 
     if (board) {
         const move = chooseBestMove(board);
-        console.log("Move: ", move)
+        console.log('Move: ', move);
         ws.send(JSON.stringify({ move }));
     }
 });
 
-function chooseBestMove(board) {
+function chooseBestMove(board: (string | null)[]): number {
     const availableMoves = getAvailableMoves(board);
 
     // Check if can win
@@ -53,11 +58,11 @@ function chooseBestMove(board) {
     return availableMoves[Math.floor(Math.random() * availableMoves.length)];
 }
 
-function getAvailableMoves(board) {
-    return board.map((value, index) => value === null ? index : null).filter(value => value !== null);
+function getAvailableMoves(board: (string | null)[]): number[] {
+    return board.map((value, index) => value === null ? index : null).filter(value => value !== null) as number[];
 }
 
-function checkWinner(board) {
+function checkWinner(board: (string | null)[]): string | null {
     const winPatterns = [
         [0, 1, 2], [3, 4, 5], [6, 7, 8],
         [0, 3, 6], [1, 4, 7], [2, 5, 8],

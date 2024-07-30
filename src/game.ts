@@ -1,20 +1,46 @@
+interface RoundData {
+    winner: string;
+    empty_cells: number;
+    moves_amount: number;
+}
+
+export interface MoveResult {
+    status: 'win' | 'draw' | 'next';
+    message: string;
+}
+
 class TicTacToe {
-    constructor(playerX, playerO) {
+    private board: (string | null)[];
+    private currentPlayer: string;
+    private playerX: string;
+    private playerO: string;
+    private scores: { [key: string]: number };
+    private roundsData: RoundData[];
+    private moves_amount: number;
+
+    constructor(playerX: string, playerO: string) {
         this.board = Array(9).fill(null);
         this.currentPlayer = playerX;
         this.playerX = playerX;
         this.playerO = playerO;
         this.scores = { [playerX]: 0, [playerO]: 0 };
         this.roundsData = [];
-        this.moves_amount = 0
+        this.moves_amount = 0;
     }
-    getCurrentPLayer() {
-        return this.currentPlayer
+
+    private resetMoves(): void {
+        this.moves_amount = 0;
     }
-    getBoard() {
-        return this.board
+
+    getCurrentPlayer(): string {
+        return this.currentPlayer;
     }
-    makeMove(playerId, index) {
+
+    getBoard(): (string | null)[] {
+        return this.board;
+    }
+
+    makeMove(playerId: string, index: number): MoveResult {
         this.board[index] = this.currentPlayer;
         this.moves_amount++;
 
@@ -41,7 +67,8 @@ class TicTacToe {
 
         return { status: 'next', message: 'Next move' };
     }
-    checkWin() {
+
+    private checkWin(): boolean {
         const winPatterns = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
             [0, 3, 6], [1, 4, 7], [2, 5, 8],
@@ -51,19 +78,18 @@ class TicTacToe {
             pattern.every(index => this.board[index] === this.currentPlayer)
         );
     }
-    resetBoard() {
+
+    resetBoard(): void {
         this.board.fill(null);
     }
-    resetMoves() {
-        this.moves_amount = 0
+
+    isGameOver(): boolean {
+        return this.scores[this.playerX] === 2 || this.scores[this.playerO] === 2;
     }
-    isGameOver() {
-        if(this.scores[this.playerX] === 2 || this.scores[this.playerO] === 2) return true
-        return false
-    }
-    getRoundsData() {
+
+    getRoundsData(): RoundData[] {
         return this.roundsData;
     }
 }
 
-module.exports = TicTacToe;
+export default TicTacToe;
